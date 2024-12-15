@@ -1,6 +1,6 @@
 import React from "react";
 
-const Sidebar = ({ collapsed, toggleSidebar }) => {
+const Sidebar = ({ collapsed, toggleSidebar, isMobile }) => {
   const menuItems = [
     { name: "Home", icon: "🏠" },
     { name: "Explore", icon: "🔍" },
@@ -11,21 +11,34 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
   ];
 
   return (
-    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      <button onClick={toggleSidebar} className="toggle-button">
-        {collapsed ? "☰" : "⇦ Collapse"}
-      </button>
-      <nav>
-        <ul className="menu">
-          {menuItems.map((item, index) => (
-            <li key={index} className="menu-item">
-              <span className="menu-icon">{item.icon}</span>
-              {!collapsed && <span className="menu-name">{item.name}</span>}
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </aside>
+    <>
+      {isMobile && (
+        <button className="burger-menu" onClick={toggleSidebar}>
+          {collapsed ? "☰" : "✖"}
+        </button>
+      )}
+      <aside
+        className={`sidebar ${isMobile && collapsed ? "mobile-hidden" : ""} ${
+          collapsed ? "collapsed" : ""
+        }`}
+      >
+        {!isMobile && (
+          <button onClick={toggleSidebar} className="toggle-button">
+            {collapsed ? "☰" : "⇦ Collapse"}
+          </button>
+        )}
+        <nav>
+          <ul className="menu">
+            {menuItems.map((item, index) => (
+              <li key={index} className="menu-item">
+                <span className="menu-icon">{item.icon}</span>
+                {!collapsed && <span className="menu-name">{item.name}</span>}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    </>
   );
 };
 

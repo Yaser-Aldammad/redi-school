@@ -14,6 +14,7 @@ function App() {
   const [theme, setTheme] = useState("light");
   const [searchTerm, setSearchTerm] = useState("");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const generateId = () => Math.random().toString(36).substring(2, 9);
 
@@ -32,6 +33,12 @@ function App() {
           }))
         )
       );
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleTweet = () => {
@@ -105,11 +112,19 @@ function App() {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
+  const toggleMobileMenu = () => {
+    setMobileMenuVisible(!mobileMenuVisible);
+  };
+
   return (
     <AppContext.Provider value={{ user, theme, setTheme, setSearchTerm }}>
       <div className={`app ${theme}`}>
         <Header />
-        <Sidebar collapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          toggleSidebar={toggleSidebar}
+          isMobile={isMobile}
+        />
         <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
           <Profile />
           <div className="tweet-input-container">

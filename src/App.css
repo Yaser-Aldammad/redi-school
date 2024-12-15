@@ -269,6 +269,39 @@ button {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
+.burger-menu {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.sidebar.mobile-hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .burger-menu {
+    display: block;
+  }
+
+  .sidebar.mobile-hidden {
+    display: none;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: fixed;
+    height: auto;
+    box-shadow: none;
+  }
+}
 
 
 @keyframes logo-spin {
