@@ -1,9 +1,6 @@
 import { format, formatDistanceToNow } from "date-fns";
 import React, { useRef, useState } from "react";
 
-
-
-
 const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
   const [likes, setLikes] = useState(tweet.likes);
   const [newComment, setNewComment] = useState("");
@@ -30,7 +27,6 @@ const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
       <p>{tweet.text}</p>
       <div className="tweet-actions">
         <small className="tweet-timestamp">
-          {/* Format timestamp */}
           {format(new Date(tweet.timestamp), "MMM d, yyyy h:mm a")} (
           {formatDistanceToNow(new Date(tweet.timestamp), { addSuffix: true })})
         </small>
@@ -51,12 +47,12 @@ const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
       )}
       {tweet.comments.length > 0 && (
         <div className="comments">
-          {tweet.comments.map((comment, index) => (
+          {tweet.comments.map((comment) => (
             <Comment
-              key={index}
+              key={comment.id}
               comment={comment}
-              onLike={() => onLikeComment(index)}
-              onRespond={(response) => onRespond(index, response)}
+              onLike={() => onLikeComment(comment.id)}
+              onRespond={(response) => onRespond(comment.id, response)}
             />
           ))}
         </div>
@@ -71,8 +67,7 @@ const Comment = ({ comment, onLike, onRespond }) => {
 
   const handleResponse = () => {
     if (newResponse.trim()) {
-      const timestamp = new Date().toISOString();
-      onRespond({ text: newResponse, timestamp });
+      onRespond(newResponse);
       setNewResponse("");
       setShowResponseBox(false);
     }
@@ -101,13 +96,14 @@ const Comment = ({ comment, onLike, onRespond }) => {
       )}
       {comment.responses.length > 0 && (
         <div className="responses">
-          {comment.responses.map((response, index) => (
-            <div key={index} className="response">
+          {comment.responses.map((response) => (
+            <div key={response.id} className="response">
               <p>{response.text}</p>
-             <small className="tweet-timestamp">
+              <small className="tweet-timestamp">
                 {format(new Date(response.timestamp), "MMM d, yyyy h:mm a")} (
                 {formatDistanceToNow(new Date(response.timestamp), { addSuffix: true })})
-              </small>  </div>
+              </small>
+            </div>
           ))}
         </div>
       )}
