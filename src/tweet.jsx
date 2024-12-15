@@ -1,4 +1,8 @@
+import { format, formatDistanceToNow } from "date-fns";
 import React, { useRef, useState } from "react";
+
+
+
 
 const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
   const [likes, setLikes] = useState(tweet.likes);
@@ -25,7 +29,11 @@ const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
     <div className="tweet">
       <p>{tweet.text}</p>
       <div className="tweet-actions">
-        <small className="tweet-timestamp">{tweet.timestamp}</small> {/* Add timestamp here */}
+        <small className="tweet-timestamp">
+          {/* Format timestamp */}
+          {format(new Date(tweet.timestamp), "MMM d, yyyy h:mm a")} (
+          {formatDistanceToNow(new Date(tweet.timestamp), { addSuffix: true })})
+        </small>
         <span className="icon" onClick={handleLike}>❤️ {likes}</span>
         <span className="icon" onClick={toggleCommentBox}>💬</span>
         <span className="icon" onClick={onRetweet}>🔁 {tweet.retweets}</span>
@@ -73,7 +81,10 @@ const Comment = ({ comment, onLike, onRespond }) => {
   return (
     <div className="comment">
       <p>{comment.text}</p>
-      <small className="tweet-timestamp">{comment.timestamp}</small> {/* Display timestamp */}
+      <small className="tweet-timestamp">
+        {format(new Date(comment.timestamp), "MMM d, yyyy h:mm a")} (
+        {formatDistanceToNow(new Date(comment.timestamp), { addSuffix: true })})
+      </small>
       <div className="comment-actions">
         <span className="icon" onClick={onLike}>❤️ {comment.likes}</span>
         <span className="icon" onClick={() => setShowResponseBox(!showResponseBox)}>↩️</span>
@@ -93,8 +104,10 @@ const Comment = ({ comment, onLike, onRespond }) => {
           {comment.responses.map((response, index) => (
             <div key={index} className="response">
               <p>{response.text}</p>
-              <small className="tweet-timestamp">{response.timestamp}</small> {/* Display timestamp */}
-  </div>
+             <small className="tweet-timestamp">
+                {format(new Date(response.timestamp), "MMM d, yyyy h:mm a")} (
+                {formatDistanceToNow(new Date(response.timestamp), { addSuffix: true })})
+              </small>  </div>
           ))}
         </div>
       )}
