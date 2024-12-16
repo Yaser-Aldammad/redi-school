@@ -1,10 +1,12 @@
 import { format, formatDistanceToNow } from "date-fns";
 import React, { useRef, useState } from "react";
 
-const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
+const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet, onUpdate, onDelete }) => {
   const [likes, setLikes] = useState(tweet.likes);
   const [newComment, setNewComment] = useState("");
   const [showCommentBox, setShowCommentBox] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedText, setUpdatedText] = useState(tweet.text);
   const commentBoxRef = useRef(null);
 
   const handleLike = () => setLikes(likes + 1);
@@ -22,9 +24,29 @@ const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
     }
   };
 
+const handleUpdate = () => {
+  if (updatedText.trim()) {
+    onUpdate(tweet.id, updatedText);
+    setIsEditing(false); // Exit edit mode on success
+  } else {
+    alert("Tweet content cannot be empty!"); // Handle empty input
+  }
+};
+
   return (
     <div className="tweet">
-      <p>{tweet.text}</p>
+      {isEditing ? (
+        <div>
+          <textarea
+            value={updatedText}
+            onChange={(e) => setUpdatedText(e.target.value)}
+          ></textarea>
+          <button onClick={handleUpdate}>Save</button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
+        </div>
+      ) : (
+        <p>{tweet.text}</p>
+      )}
       <div className="tweet-actions">
         <small className="tweet-timestamp">
           {format(new Date(tweet.timestamp), "MMM d, yyyy h:mm a")} (
@@ -33,6 +55,8 @@ const Tweet = ({ tweet, onComment, onLikeComment, onRespond, onRetweet }) => {
         <span className="icon" onClick={handleLike}>❤️ {likes}</span>
         <span className="icon" onClick={toggleCommentBox}>💬</span>
         <span className="icon" onClick={onRetweet}>🔁 {tweet.retweets}</span>
+        <span className="icon" onClick={() => setIsEditing(true)}>✏️ Edit</span>
+        <span className="icon" onClick={() => onDelete(tweet.id)}>🗑️ Delete</span>
       </div>
       {showCommentBox && (
         <div className="comment-box">
